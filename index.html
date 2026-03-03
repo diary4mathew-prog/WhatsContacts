@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>WhatsApp Direct + Contact Saver</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #00c6fb 0%, #005bea 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 500px;
+        }
+
+        .app-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 30px;
+            padding: 25px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            animation: slideUp 0.5s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .logo {
+            width: 40px;
+            height: 40px;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            color: #1e293b;
+            margin-bottom: 5px;
+        }
+
+        .header p {
+            color: #64748b;
+            font-size: 14px;
+        }
+
+        .input-section {
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #334155;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .input-icon {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-icon i {
+            position: absolute;
+            left: 12px;
+            color: #94a3b8;
+            font-size: 18px;
+        }
+
+        .input-icon input {
+            width: 100%;
+            padding: 14px 14px 14px 45px;
+            border: 2px solid #e2e8f0;
+            border-radius: 15px;
+            font-size: 16px;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .input-icon input:focus {
+            border-color: #25D366;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(37, 211, 102, 0.1);
+        }
+
+        .country-hint {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 8px;
+            color: #64748b;
+            font-size: 12px;
+        }
+
+        .country-hint span {
+            background: #e2e8f0;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-weight: 500;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin: 25px 0;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 15px;
+            border: none;
+            border-radius: 15px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn:active {
+            transform: scale(0.98);
+        }
+
+        .btn-whatsapp {
+            background: #25D366;
+            color: white;
+            box-shadow: 0 10px 20px -10px #25D366;
+        }
+
+        .btn-whatsapp:hover {
+            background: #20bd5a;
+        }
+
+        .btn-contact {
+            background: #4f46e5;
+            color: white;
+            box-shadow: 0 10px 20px -10px #4f46e5;
+        }
+
+        .btn-contact:hover {
+            background: #4338ca;
+        }
+
+        .btn-clear {
+            background: #f1f5f9;
+            color: #475569;
+        }
+
+        .btn-clear:hover {
+            background: #e2e8f0;
+        }
+
+        .result-section {
+            background: #f8fafc;
+            border-radius: 20px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 2px solid #e2e8f0;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .link-box {
+            display: flex;
+            gap: 8px;
+            margin: 15px 0;
+        }
+
+        .link-box input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            font-size: 14px;
+            background: white;
+        }
+
+        .link-box button {
+            padding: 0 20px;
+            background: #334155;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+
+        .link-box button:hover {
+            background: #1e293b;
+        }
+
+        .whatsapp-link-btn {
+            display: block;
+            text-align: center;
+            padding: 12px;
+            background: #25D366;
+            color: white;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 600;
+            margin-top: 10px;
+            transition: opacity 0.3s;
+        }
+
+        .whatsapp-link-btn:hover {
+            opacity: 0.9;
+        }
+
+        .recent-section {
+            margin-top: 20px;
+        }
+
+        .recent-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .recent-header h3 {
+            color: #334155;
+            font-size: 16px;
+        }
+
+        .clear-recent {
+            background: none;
+            border: none;
+            color: #ef4444;
+            font-size: 13px;
+            cursor: pointer;
+            padding: 5px 10px;
+            border-radius: 20px;
+        }
+
+        .clear-recent:hover {
+            background: #fee2e2;
+        }
+
+        .recent-list {
+            list-style: none;
+        }
+
+        .recent-list li {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .recent-list li:hover {
+            background: #f1f5f9;
+            transform: translateX(5px);
+        }
+
+        .recent-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .recent-name {
+            font-weight: 600;
+            color: #0f172a;
+            font-size: 14px;
+        }
+
+        .recent-number {
+            font-size: 12px;
+            color: #64748b;
+        }
+
+        .recent-time {
+            font-size: 11px;
+            color: #94a3b8;
+        }
+
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1e293b;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 14px;
+            z-index: 1000;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            animation: slideUp 0.3s ease;
+        }
+
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 30px;
+            padding: 30px;
+            max-width: 400px;
+            width: 100%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .modal-content h3 {
+            color: #1e293b;
+            margin-bottom: 15px;
+            font-size: 20px;
+        }
+
+        .instructions ol {
+            margin: 15px 0 20px 25px;
+            color: #475569;
+            line-height: 1.6;
+        }
+
+        .instructions li {
+            margin-bottom: 10px;
+        }
+
+        .modal-close {
+            width: 100%;
+            padding: 15px;
+            background: #4f46e5;
+            color: white;
+            border: none;
+            border-radius: 15px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .contact-preview {
+            background: #f1f5f9;
+            border-radius: 15px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .contact-preview-item {
+            display: flex;
+            margin-bottom: 10px;
+        }
+
+        .contact-preview-label {
+            width: 80px;
+            color: #64748b;
+        }
+
+        .contact-preview-value {
+            color: #0f172a;
+            font-weight: 500;
+        }
+
+        .dual-purpose {
+            display: flex;
+            gap: 8px;
+            margin: 15px 0;
+        }
+
+        .badge {
+            background: #e2e8f0;
+            color: #475569;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+        }
+
+        @media (max-width: 480px) {
+            .app-card {
+                padding: 20px;
+            }
+            
+            .action-buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="app-card">
+            <div class="header">
+                <div class="logo-container">
+                    <svg class="logo" viewBox="0 0 24 24" fill="#25D366">
+                        <path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91C2.13 13.91 2.76 15.79 3.92 17.33L2.09 21.87L6.79 20.09C8.31 21.06 10.07 21.63 11.96 21.63C17.42 21.63 21.87 17.18 21.87 11.72C21.87 6.26 17.45 2 12.04 2ZM12.04 20.15C10.38 20.15 8.81 19.67 7.44 18.78L7.15 18.6L4.53 19.5L5.45 16.98L5.25 16.68C4.22 15.19 3.64 13.45 3.64 11.64C3.64 7.11 7.41 3.34 11.94 3.34C16.47 3.34 20.24 7.11 20.24 11.64C20.24 16.17 16.5 20.15 12.04 20.15ZM16.59 13.86C16.29 13.71 14.89 13.03 14.62 12.93C14.35 12.83 14.14 12.78 13.93 13.08C13.72 13.38 13.11 14.01 12.93 14.21C12.75 14.41 12.57 14.44 12.27 14.29C11.97 14.14 11.05 13.84 9.96 12.88C9.11 12.13 8.52 11.2 8.34 10.9C8.16 10.6 8.32 10.43 8.47 10.28C8.61 10.14 8.79 9.91 8.94 9.73C9.09 9.55 9.15 9.41 9.24 9.21C9.33 9.01 9.29 8.83 9.21 8.68C9.13 8.53 8.55 7.14 8.32 6.59C8.1 6.04 7.87 6.11 7.69 6.1C7.52 6.09 7.32 6.09 7.12 6.09C6.92 6.09 6.6 6.16 6.33 6.46C6.06 6.76 5.31 7.46 5.31 8.89C5.31 10.32 6.34 11.71 6.49 11.91C6.64 12.11 8.48 14.9 11.22 16.09C12.01 16.45 12.61 16.64 13.07 16.78C13.86 17.03 14.58 16.98 15.15 16.87C15.79 16.75 17.12 16.14 17.4 15.47C17.68 14.8 17.68 14.23 17.6 14.08C17.52 13.93 17.31 13.86 16.59 13.86Z"/>
+                    </svg>
+                    <svg class="logo" viewBox="0 0 24 24" fill="#4f46e5">
+                        <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 4c1.93 0 3.5 1.57 3.5 3.5S13.93 13 12 13s-3.5-1.57-3.5-3.5S10.07 6 12 6zm0 14c-2.03 0-4.43-.82-6-2.28 0-2.56 3.5-4.72 6-4.72s6 2.16 6 4.72c-1.57 1.46-3.97 2.28-6 2.28z"/>
+                    </svg>
+                </div>
+                <h1>WhatsApp + Contacts</h1>
+                <p>Chat without saving + Save contacts easily</p>
+            </div>
+
+            <div class="input-section">
+                <div class="input-group">
+                    <label>📇 Contact Name (optional)</label>
+                    <div class="input-icon">
+                        <i>👤</i>
+                        <input type="text" id="contactName" placeholder="Enter contact name" autocomplete="off">
+                    </div>
+                </div>
+
+                <div class="input-group">
+                    <label>📱 Phone Number (with country code)</label>
+                    <div class="input-icon">
+                        <i>📞</i>
+                        <input type="tel" id="phoneNumber" placeholder="e.g., 1234567890" autocomplete="off">
+                    </div>
+                    <div class="country-hint">
+                        <span>🇺🇸 +1</span>
+                        <span>🇮🇳 +91</span>
+                        <span>🇬🇧 +44</span>
+                        <span>🇦🇺 +61</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button id="whatsappBtn" class="btn btn-whatsapp">
+                    <span>💬</span> WhatsApp Chat
+                </button>
+                <button id="contactBtn" class="btn btn-contact">
+                    <span>📇</span> Save Contact
+                </button>
+                <button id="clearBtn" class="btn btn-clear">
+                    <span>🗑️</span>
+                </button>
+            </div>
+
+            <div id="resultSection" class="result-section" style="display: none;">
+                <div class="dual-purpose">
+                    <span class="badge" id="resultBadge">WhatsApp Link</span>
+                </div>
+                
+                <div class="contact-preview" id="contactPreview" style="display: none;">
+                    <div class="contact-preview-item">
+                        <span class="contact-preview-label">Name:</span>
+                        <span class="contact-preview-value" id="previewName">-</span>
+                    </div>
+                    <div class="contact-preview-item">
+                        <span class="contact-preview-label">Phone:</span>
+                        <span class="contact-preview-value" id="previewPhone">-</span>
+                    </div>
+                </div>
+
+                <div class="link-box">
+                    <input type="text" id="generatedLink" readonly placeholder="Generated link will appear here">
+                    <button id="copyBtn">Copy</button>
+                </div>
+                
+                <a id="whatsappLink" href="#" target="_blank" class="whatsapp-link-btn">
+                    Open in WhatsApp
+                </a>
+                
+                <button id="downloadContactBtn" class="btn btn-contact" style="margin-top: 10px; display: none;">
+                    📥 Download Contact File
+                </button>
+            </div>
+
+            <div class="recent-section">
+                <div class="recent-header">
+                    <h3>🕒 Recent Activity</h3>
+                    <button id="clearRecentBtn" class="clear-recent">Clear All</button>
+                </div>
+                <ul id="recentList" class="recent-list">
+                    <li style="justify-content: center; color: #94a3b8;">No recent activity</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class WhatsAppContactApp {
+            constructor() {
+                // DOM Elements
+                this.phoneInput = document.getElementById('phoneNumber');
+                this.nameInput = document.getElementById('contactName');
+                this.whatsappBtn = document.getElementById('whatsappBtn');
+                this.contactBtn = document.getElementById('contactBtn');
+                this.clearBtn = document.getElementById('clearBtn');
+                this.clearRecentBtn = document.getElementById('clearRecentBtn');
+                this.resultSection = document.getElementById('resultSection');
+                this.generatedLink = document.getElementById('generatedLink');
+                self.whatsappLink = document.getElementById('whatsappLink');
+                this.copyBtn = document.getElementById('copyBtn');
+                this.recentList = document.getElementById('recentList');
+                this.resultBadge = document.getElementById('resultBadge');
+                this.contactPreview = document.getElementById('contactPreview');
+                this.previewName = document.getElementById('previewName');
+                this.previewPhone = document.getElementById('previewPhone');
+                this.downloadContactBtn = document.getElementById('downloadContactBtn');
+                
+                // Data
+                this.recentItems = this.loadRecent();
+                this.currentMode = 'whatsapp'; // 'whatsapp' or 'contact'
+                
+                // Initialize
+                this.init();
+            }
+            
+            init() {
+                // Event listeners
+                this.whatsappBtn.addEventListener('click', () => this.handleWhatsApp());
+                this.contactBtn.addEventListener('click', () => this.handleContact());
+                this.clearBtn.addEventListener('click', () => this.clearInputs());
+                this.copyBtn.addEventListener('click', () => this.copyToClipboard());
+                this.downloadContactBtn.addEventListener('click', () => this.downloadContact());
+                
+                if (this.clearRecentBtn) {
+                    this.clearRecentBtn.addEventListener('click', () => this.clearRecent());
+                }
+                
+                // Enter key support
+                this.phoneInput.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') this.handleWhatsApp();
+                });
+                
+                // Load recent items
+                this.displayRecent();
+            }
+            
+            validatePhone(number) {
+                const cleaned = number.replace(/\D/g, '');
+                return cleaned.length >= 8 ? cleaned : null;
+            }
+            
+            formatPhoneForDisplay(number) {
+                const cleaned = number.replace(/\D/g, '');
+                if (cleaned.length > 10) {
+                    return '+' + cleaned.slice(0, cleaned.length-10) + ' ' + cleaned.slice(-10);
+                }
+                return cleaned;
+            }
+            
+            handleWhatsApp() {
+                const phone = this.phoneInput.value.trim();
+                const name = this.nameInput.value.trim();
+                
+                if (!phone) {
+                    this.showToast('Please enter a phone number');
+                    return;
+                }
+                
+                const validated = this.validatePhone(phone);
+                if (!validated) {
+                    this.showToast('Please enter a valid phone number');
+                    return;
+                }
+                
+                // Generate WhatsApp link
+                const link = `https://wa.me/$%7Bvalidated%7D`;
+                
+                // Update UI for WhatsApp mode
+                this.currentMode = 'whatsapp';
+                this.resultBadge.textContent = 'WhatsApp Link';
+                this.contactPreview.style.display = 'none';
+                this.downloadContactBtn.style.display = 'none';
+                self.whatsappLink.style.display = 'block';
+                this.generatedLink.value = link;
+                self.whatsappLink.href = link;
+                this.resultSection.style.display = 'block';
+                
+                // Save to recent
+                this.saveToRecent(validated, name, 'whatsapp');
+                
+                // Open WhatsApp
+                window.open(link, '_blank');
+            }
+            
+            handleContact() {
+                const phone = this.phoneInput.value.trim();
+                const name = this.nameInput.value.trim();
+                
+                if (!phone) {
+                    this.showToast('Please enter a phone number');
+                    return;
+                }
+                
+                const validated = this.validatePhone(phone);
+                if (!validated) {
+                    this.showToast('Please enter a valid phone number');
+                    return;
+                }
+                
+                // Generate display info
+                const displayName = name || `Contact $%7Bvalidated.slice(-4)%7D`;
+                const displayPhone = this.formatPhoneForDisplay(validated);
+                
+                // Update UI for contact mode
+                this.currentMode = 'contact';
+                this.resultBadge.textContent = 'Contact Information';
+                this.previewName.textContent = displayName;
+                this.previewPhone.textContent = displayPhone;
+                this.contactPreview.style.display = 'block';
+                self.whatsappLink.style.display = 'none';
+                this.downloadContactBtn.style.display = 'block';
+                this.generatedLink.value = `$%7BdisplayName%7D - $%7BdisplayPhone%7D`;
+                this.resultSection.style.display = 'block';
+                
+                // Save to recent
+                this.saveToRecent(validated, name, 'contact');
+                
+                // Show instructions
+                this.showContactInstructions();
+            }
+            
+            downloadContact() {
+                const phone = this.phoneInput.value.trim();
+                const name = this.nameInput.value.trim();
+                
+                const validated = this.validatePhone(phone);
+                const displayName = name || `Contact_$%7Bvalidated.slice(-4)%7D`;
+                
+                // Generate vCard
+                const vcard = `BEGIN:VCARD
+VERSION:3.0
+FN:$%7BdisplayName%7D
+N:$%7BdisplayName.split(' ').reverse().join(';')%7D;;;
+TEL;TYPE=CELL:$%7Bvalidated%7D
+NOTE:Added via WhatsApp Contact Saver
+URL:https://wa.me/$%7Bvalidated%7D
+END:VCARD`;
+                
+                // Create and download file
+                const blob = new Blob([vcard], { type: 'text/vcard' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `$%7BdisplayName.replace(/\s+/g, '_')%7D.vcf`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+                
+                this.showToast('Contact file downloaded!');
+            }
+            
+            showContactInstructions() {
+                const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+                
+                const modal = document.createElement('div');
+                modal.className = 'modal';
+                modal.innerHTML = `
+                    <div class="modal-content">
+                        <h3>📇 Save to Contacts</h3>
+                        <div class="instructions">
+                            $%7BisMobile ? `
+                                <ol>
+                                    <li>Tap the <strong>"Download Contact File"</strong> button</li>
+                                    <li>Look for the downloaded .vcf file in your notifications</li>
+                                    <li>Tap on the file to open in Contacts app</li>
+                                    <li>Tap "Save" or "Add to Contacts"</li>
+                                </ol>
+                            ` : `
+                                <ol>
+                                    <li>Click <strong>"Download Contact File"</strong></li>
+                                    <li>Open the downloaded .vcf file</li>
+                                    <li>Your contacts app will open with the details</li>
+                                    <li>Click "Save" to add to contacts</li>
+                                </ol>
+                            `%7D
+                        </div>
+                        <button class="modal-close">Got it</button>
+                    </div>
+                `;
+                
+                document.body.appendChild(modal);
+                modal.querySelector('.modal-close').addEventListener('click', () => {
+                    modal.remove();
+                });
+            }
+            
+            copyToClipboard() {
+                this.generatedLink.select();
+                document.execCommand('copy');
+                this.showToast('Copied to clipboard!');
+            }
+            
+            clearInputs() {
+                this.phoneInput.value = '';
+                this.nameInput.value = '';
+                this.resultSection.style.display = 'none';
+                this.phoneInput.focus();
+            }
+            
+            showToast(message) {
+                const toast = document.createElement('div');
+                toast.className = 'toast';
+                toast.textContent = message;
+                document.body.appendChild(toast);
+                
+                setTimeout(() => {
+                    toast.remove();
+                }, 3000);
+            }
+            
+            saveToRecent(number, name, type) {
+                const item = {
+                    id: Date.now(),
+                    number: number,
+                    name: name || null,
+                    type: type,
+                    timestamp: new Date().toLocaleTimeString(),
+                    date: new Date().toLocaleDateString()
+                };
+                
+                this.recentItems.unshift(item);
+                
+                // Keep only last 15 items
+                if (this.recentItems.length > 15) {
+                    this.recentItems.pop();
+                }
+                
+                localStorage.setItem('whatsappRecent', JSON.stringify(this.recentItems));
+                this.displayRecent();
+            }
+            
+            loadRecent() {
+                const saved = localStorage.getItem('whatsappRecent');
+                return saved ? JSON.parse(saved) : [];
+            }
+            
+            displayRecent() {
+                if (!this.recentList) return;
+                
+                this.recentList.innerHTML = '';
+                
+                if (this.recentItems.length === 0) {
+                    this.recentList.innerHTML = '<li style="justify-content: center; color: #94a3b8;">No recent activity</li>';
+                    return;
+                }
+                
+                this.recentItems.slice(0, 10).forEach(item => {
+                    const li = document.createElement('li');
+                    const displayName = item.name || `+$%7Bitem.number%7D`;
+                    const typeIcon = item.type === 'whatsapp' ? '💬' : '📇';
+                    
+                    li.innerHTML = `
+                        <div class="recent-info">
+                            <span class="recent-name">$%7BtypeIcon%7D $%7BdisplayName%7D</span>
+                            <span class="recent-number">+$%7Bitem.number%7D</span>
+                        </div>
+                        <span class="recent-time">$%7Bitem.timestamp%7D</span>
+                    `;
+                    
+                    li.addEventListener('click', () => {
+                        this.phoneInput.value = item.number;
+                        if (item.name) {
+                            this.nameInput.value = item.name;
+                        }
+                        
+                        if (item.type === 'whatsapp') {
+                            this.handleWhatsApp();
+                        } else {
+                            this.handleContact();
+                        }
+                    });
+                    
+                    this.recentList.appendChild(li);
+                });
+            }
+            
+            clearRecent() {
+                if (confirm('Clear all recent items?')) {
+                    this.recentItems = [];
+                    localStorage.removeItem('whatsappRecent');
+                    this.displayRecent();
+                }
+            }
+        }
+        
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', () => {
+            new WhatsAppContactApp();
+        });
+    </script>
+</body>
+</html>
